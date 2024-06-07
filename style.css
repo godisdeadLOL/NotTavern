@@ -1,0 +1,68 @@
+:root {
+    /* --pico-block-spacing-vertical: 0.8rem */
+    --pico-card-box-shadow: none;
+    --pico-font-size: 100%;
+}
+
+header.container-fluid {
+    --pico-block-spacing-vertical: 0.5rem;
+    --pico-nav-element-spacing-vertical: 0;
+    --pico-nav-element-spacing-horizontal: 0.2rem;
+
+    position: sticky;
+    top: 0;
+    background: var(--pico-background-color);
+    border-bottom: var(--pico-border-width) solid var(--pico-card-border-color);
+    z-index: 100;
+    /* box-shadow: var(--pico-card-box-shadow) */
+}
+
+footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--pico-background-color);
+    border-top: var(--pico-border-width) solid var(--pico-card-border-color);
+    /* box-shadow: var(--pico-card-box-shadow) */
+}
+
+.button-icon {
+    cursor: pointer;
+    color: var(--pico-color);
+    display: inline-block;
+
+    padding: 8px;
+    border-radius: 100%;
+
+    border: none;
+    background: none;
+}
+.button-icon:hover {
+    background-color: var(--pico-form-element-selected-background-color)
+}
+.button-icon:active {
+    background-color: var(--pico-contrast-focus);
+    outline: none;
+}
+.button-icon::selection {
+    border: none;
+    outline: none;
+}
+
+.cancel.button-icon {
+    color: var(--pico-del-color);
+}
+
+article main :last-child {
+    margin-bottom: 0;
+}
+
+div.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+article header{
+    display: flex;
+    justify-content: space-between;
+}
