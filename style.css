@@ -2,6 +2,7 @@
     /* --pico-block-spacing-vertical: 0.8rem */
     --pico-card-box-shadow: none;
     --pico-font-size: 100%;
+    --pico-outline-width: 0
 }
 
 header.container-fluid {
@@ -27,7 +28,7 @@ footer {
 
 .button-icon {
     cursor: pointer;
-    color: var(--pico-color);
+    color: var(--pico-h1-color);
     display: inline-block;
 
     padding: 8px;
@@ -43,14 +44,38 @@ footer {
     background-color: var(--pico-contrast-focus);
     outline: none;
 }
-.button-icon::selection {
+.button-icon:focus{
+    outline: none !important;
+    border: none !important;
+}
+/* .button-icon::selection {
     border: none;
     outline: none;
-}
+} */
 
 .cancel.button-icon {
     color: var(--pico-del-color);
 }
+
+.small.button-icon {
+    padding: 4px;
+}
+.small.button-icon span {
+    font-size: 18;
+}
+
+.dropdown-icon summary::after {
+    display: none !important;
+}
+.dropdown-icon ul {
+    right: 0px;
+    left: auto !important;
+}
+.dropdown-icon ul li a {
+    cursor: pointer;
+    user-select: none
+}
+
 
 article main :last-child {
     margin-bottom: 0;
@@ -64,5 +89,10 @@ div.centered {
 
 article header{
     display: flex;
+    align-items: center;
     justify-content: space-between;
+}
+
+article header details {
+    margin-bottom: 0;
 }

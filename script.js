@@ -29,13 +29,14 @@ class Messages {
         return message
     }
 
-    static remove(id) {
+    static remove(id, drop=false) {
         let messages = Messages.list()
 
         const index = messages.findIndex(item => item.id == id)
         if (index == -1) return
 
-        messages.splice(index, 1)
+        if(drop) messages.splice(index)
+        else messages.splice(index, 1)
         Messages.update(messages)
     }
 }
@@ -48,7 +49,7 @@ class Profile {
             model: 'gpt-4o',
             model_override: '',
             max_messages: 20,
-            max_output: 1024,
+            max_tokens: 1024,
             jailbreak: '',
             main: ''
         }
@@ -94,7 +95,7 @@ class Completions {
         const request = {
             messages,
             model: !profile.model_override ? profile.model : profile.model_override,
-            max_tokens: profile.max_output,
+            max_tokens: profile.max_tokens,
             stream: true
         }
 
