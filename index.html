@@ -96,8 +96,8 @@
             data.model_override = profile.model_override
             data.main = profile.main
             data.jailbreak = profile.jailbreak
-            data.max_messages = profile.max_messages
-            data.max_tokens = profile.max_tokens
+            data.max_messages = parseInt(profile.max_messages)
+            data.max_tokens = parseInt(profile.max_tokens)
         }
         function updateProfile(data) {
             const profile = Profile.get()
