@@ -289,7 +289,7 @@
                     <small>Max response size: <span x-text="max_tokens">12</span> </small>
 
                     <hr>
-                    <input x-on:click="$store.modalTune=false" type="button" value="Apply">
+                    <input x-on:click="$store.modalTune=false; updateProfile($data)" type="button" value="Apply"> <!-- Blur for range not work on mobile -->
                 </form>
             </main>
         </article>
