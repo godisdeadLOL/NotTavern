@@ -108,8 +108,8 @@
                 model_override: data.model_override,
                 main: data.main,
                 jailbreak: data.jailbreak,
-                max_messages: data.max_messages,
-                max_tokens: data.max_tokens
+                max_messages: parseInt(data.max_messages),
+                max_tokens: parseInt(data.max_tokens)
             }
 
             Object.keys(updated).forEach(key => updated[key] === undefined && delete updated[key]);
