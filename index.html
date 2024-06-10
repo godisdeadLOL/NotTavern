@@ -241,26 +241,26 @@
                 <form x-data="{base_url: '', api_key: '', model: '', model_override: '', models: []}"
                     x-init="loadProfile($data)">
                     <label>Base URL</label>
-                    <input x-model="base_url" x-on:blur="updateProfile($data)">
+                    <input x-model="base_url">
                     <small>Should end with / </small>
 
                     <label>API key</label>
-                    <input x-model="api_key" x-on:blur="updateProfile($data)">
+                    <input x-model="api_key">
 
                     <label>Model</label>
-                    <select x-model="model" x-on:blur="updateProfile($data)">
+                    <select x-model="model">
                         <template x-for="model in models">
                             <option x-text="model">gpt-4o</option>
                         </template>
                     </select>
 
                     <label>Model override</label>
-                    <input x-model="model_override" x-on:blur="updateProfile($data)">
+                    <input x-model="model_override">
 
                     <hr>
 
                     <input x-on:click="loadModels($data)" type="button" value="Get models" class="outline">
-                    <input x-on:click="$store.modalConnection=false" type="button" value="Apply">
+                    <input x-on:click="$store.modalConnection=false; updateProfile($data)" type="button" value="Apply">
                 </form>
             </main>
         </article>
@@ -278,15 +278,15 @@
             <main>
                 <form x-data="{main: '', jailbreak: ''}" x-init="loadProfile($data)">
                     <label>Main prompt</label>
-                    <textarea rows="4" x-model="main" x-on:blur="updateProfile($data)"></textarea>
+                    <textarea rows="4" x-model="main"></textarea>
                     <small>Inserted before first message</small>
 
                     <label>Jailbreak</label>
-                    <textarea rows="4" x-model="jailbreak" x-on:blur="updateProfile($data)"></textarea>
+                    <textarea rows="4" x-model="jailbreak"></textarea>
                     <small>Inserted after last message</small>
 
                     <hr>
-                    <input x-on:click="$store.modalCharacter=false" type="button" value="Apply">
+                    <input x-on:click="$store.modalCharacter=false; updateProfile($data)" type="button" value="Apply">
                 </form>
             </main>
         </article>
@@ -304,11 +304,11 @@
             <main>
                 <form x-data="{max_messages: '', max_tokens: ''}" x-init="loadProfile($data)">
                     <label>Messages limit </label>
-                    <input x-model="max_messages" type="range" min="1" max="100" x-on:blur="updateProfile($data)" />
+                    <input x-model="max_messages" type="range" min="1" max="100"/>
                     <small>Max messages to send: <span x-text="max_messages">12</span> </small>
 
                     <label>Max response</label>
-                    <input x-model="max_tokens" type="range" min="1" max="2048" x-on:blur="updateProfile($data)" />
+                    <input x-model="max_tokens" type="range" min="1" max="2048"/>
                     <small>Max response size: <span x-text="max_tokens">12</span> </small>
 
                     <hr>
