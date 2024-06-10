@@ -96,3 +96,9 @@ article header{
 article header details {
     margin-bottom: 0;
 }
+
+
+dialog article main article {
+    border: var(--pico-border-width) solid var(--pico-muted-border-color);
+    /* box-shadow: var(--pico-card-box-shadow) */
+}

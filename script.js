@@ -8,25 +8,38 @@ class Messages {
         return lastId
     }
 
-    static list() {
+    static list(notes=false) {
         const messagesString = localStorage.getItem('messages')
 
         if (messagesString === null) return []
-        return JSON.parse(messagesString)
+        let messages = JSON.parse(messagesString)
+
+        if(notes) messages = messages.filter(msg => !!msg.pinned)
+        return messages
     }
 
-    static update(messages) {
+    static updateAll(messages) {
         localStorage.setItem('messages', JSON.stringify(messages))
     }
 
-    static add({ content, role }) {
-        const message = { id: Messages.#getNextId(), content, role }
+    static add(message) {
+        const added = { id: Messages.#getNextId(), pinned: false, ...message }
 
         let messages = Messages.list()
-        messages.push(message)
-        Messages.update(messages)
+        messages.push(added)
+        Messages.updateAll(messages)
 
-        return message
+        return added
+    }
+
+    static update(id, message) {
+        let messages = Messages.list()
+
+        const index = messages.findIndex(item => item.id == id)
+        if (index == -1) return
+
+        messages[index] = { ...messages[index], ...message }
+        Messages.updateAll(messages)
     }
 
     static remove(id, drop=false) {
@@ -37,7 +50,7 @@ class Messages {
 
         if(drop) messages.splice(index)
         else messages.splice(index, 1)
-        Messages.update(messages)
+        Messages.updateAll(messages)
     }
 }
 
@@ -84,13 +97,24 @@ class Completions {
     static async * send() {
         const profile = Profile.get()
 
+        // Messages
         let messages = Messages.list()
+        
+        messages.unshift({ role: 'system', content: '### Chat history'  })
+
         if (!!profile.main) messages.unshift({ role: 'system', content: profile.main })
         if (!!profile.jailbreak) messages.push({ role: 'system', content: profile.jailbreak })
 
         messages = messages.slice(-profile.max_messages)
 
-        console.log(messages)
+        // Notes
+        let notes = Messages.list(true)
+        
+        if (notes.length > 0) {
+            notes.forEach(msg => msg.role = 'system')
+            messages.unshift(...notes)
+            messages.unshift({ role: 'system', content: '### Notes (pinned messages containing important information)' })
+        }
 
         const request = {
             messages,
@@ -98,6 +122,8 @@ class Completions {
             max_tokens: profile.max_tokens,
             stream: true
         }
+
+        console.log(request)
 
         const url = profile.base_url + 'chat/completions'
         const headers = {

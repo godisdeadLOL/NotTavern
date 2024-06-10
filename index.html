@@ -66,6 +66,24 @@
             if (!!data.reader) addMessageStream(data, response)
         }
 
+        function updateMessage(data, message, updated) {
+            const index = data.messages.indexOf(message)
+
+            data.messages[index] = { ...message, ...updated }
+            Messages.update(message.id, updated)
+        }
+
+        function deleteMessage(data, message, drop = false) {
+            const index = data.messages.indexOf(message)
+
+            if (drop) data.messages.splice(index)
+            else data.messages.splice(index, 1)
+
+            Messages.remove(message.id, drop)
+        }
+
+        //
+
         function alterTextArea(textArea) {
             textArea.style.height = 'auto';
             textArea.style.height = (textArea.scrollHeight + 2) + 'px';
@@ -76,15 +94,6 @@
                 e.preventDefault()
                 sendMessage(data, { role: 'user', content: data.content })
             }
-        }
-
-        function deleteMessage(data, message, drop = false) {
-            const index = data.messages.indexOf(message)
-
-            if (drop) data.messages.splice(index)
-            else data.messages.splice(index, 1)
-
-            Messages.remove(message.id, drop)
         }
 
         // Profile
@@ -127,12 +136,13 @@
             Alpine.store('modalConnection', false)
             Alpine.store('modalCharacter', false)
             Alpine.store('modalTune', false)
+            Alpine.store('modalNotes', false)
         })
 
     </script>
 </head>
 
-<body x-data="{messages: []}">
+<body x-data="{messages: []}" x-init="loadMessages($data)">
     <header class="container-fluid">
         <nav>
             <ul>
@@ -140,6 +150,11 @@
             </ul>
 
             <ul>
+                <li>
+                    <button class="button-icon" x-on:click="$store.modalNotes=true">
+                        <span class="material-symbols-outlined"> note_stack </span>
+                    </button>
+                </li>
                 <li>
                     <button class="button-icon" x-on:click="$store.modalConnection=true">
                         <span class="material-symbols-outlined"> link </span>
@@ -160,17 +175,25 @@
         </nav>
     </header>
 
-    <main x-ref="messages" x-init="loadMessages($data)" class="container-fluid">
+    <main x-ref="messages" class="container-fluid">
 
         <template x-for="message in messages">
             <article>
                 <header>
                     <strong x-text="message.role">Assistant</strong>
 
+                    <span x-show="message.pinned === true"
+                        style="font-size: 18; flex-grow: 1; user-select: none; padding-left: 4px; color: var(--pico-muted-color)"
+                        class="material-symbols-outlined">
+                        keep
+                    </span>
+
                     <details class="dropdown dropdown-icon">
                         <summary role="button" class="button-icon small"> <span
                                 class="material-symbols-outlined">more_vert</span> </summary>
                         <ul style="right: -16px;">
+                            <li> <a x-on:click="updateMessage($data, message, {pinned: !message.pinned} )"
+                                    x-text="message.pinned ? 'Unpin' : 'Pin' ">Pin</a> </li>
                             <li> <a x-on:click="deleteMessage($data, message)">Delete</a> </li>
                             <li> <a x-on:click="deleteMessage($data, message, true)">Delete all</a> </li>
                         </ul>
@@ -281,16 +304,48 @@
             <main>
                 <form x-data="{max_messages: '', max_tokens: ''}" x-init="loadProfile($data)">
                     <label>Messages limit </label>
-                    <input x-model="max_messages" type="range" min="1" max="100" x-on:blur="updateProfile($data)"/>
+                    <input x-model="max_messages" type="range" min="1" max="100" x-on:blur="updateProfile($data)" />
                     <small>Max messages to send: <span x-text="max_messages">12</span> </small>
 
                     <label>Max response</label>
-                    <input x-model="max_tokens" type="range" min="1" max="2048" x-on:blur="updateProfile($data)"/>
+                    <input x-model="max_tokens" type="range" min="1" max="2048" x-on:blur="updateProfile($data)" />
                     <small>Max response size: <span x-text="max_tokens">12</span> </small>
 
                     <hr>
-                    <input x-on:click="$store.modalTune=false; updateProfile($data)" type="button" value="Apply"> <!-- Blur for range not work on mobile -->
+                    <input x-on:click="$store.modalTune=false; updateProfile($data)" type="button" value="Apply">
+                    <!-- Blur for range not work on mobile -->
                 </form>
+            </main>
+        </article>
+    </dialog>
+
+    <dialog x-bind:open="$store.modalNotes">
+        <article>
+            <header>
+                <strong>Notes</strong>
+
+                <button x-on:click="$store.modalNotes=false" class="button-icon small">
+                    <span class="material-symbols-outlined"> close </span>
+                </button>
+            </header>
+            <main>
+
+                <template x-for="message in messages.filter(msg => !!msg.pinned) ">
+                    <article style="width: auto;">
+                        <header>
+                            <strong x-text="message.role">Assistant</strong>
+
+                            <button x-on:click="updateMessage($data, message, {pinned: false} )" class="button-icon small cancel">
+                                <span class="material-symbols-outlined"> delete </span>
+                            </button>
+                        </header>
+
+                        <main x-bind:aria-busy="!message.content" x-html="marked.parse(message.content)">lol</main>
+                    </article>
+                </template>
+
+                <hr>
+
             </main>
         </article>
     </dialog>
