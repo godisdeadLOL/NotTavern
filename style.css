@@ -5,25 +5,28 @@
     --pico-outline-width: 0
 }
 
-header.container-fluid {
+body>header {
     --pico-block-spacing-vertical: 0.5rem;
     --pico-nav-element-spacing-vertical: 0;
     --pico-nav-element-spacing-horizontal: 0.2rem;
 
-    position: sticky;
+    position: fixed;
     top: 0;
     background: var(--pico-background-color);
     border-bottom: var(--pico-border-width) solid var(--pico-card-border-color);
     z-index: 100;
-    /* box-shadow: var(--pico-card-box-shadow) */
 }
 
-footer {
-    position: sticky;
+body>main {
+    padding-top: 64px;
+    padding-bottom: 80px;
+}
+
+body>footer {
+    position: fixed;
     bottom: 0;
     background: var(--pico-background-color);
     border-top: var(--pico-border-width) solid var(--pico-card-border-color);
-    /* box-shadow: var(--pico-card-box-shadow) */
 }
 
 .button-icon {
