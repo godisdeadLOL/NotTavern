@@ -19,6 +19,14 @@
     <script>
 
         // Messages
+        function scrollDown() {
+            setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 1)
+        }
+        function streamScrollStep() {
+            const diff = window.scrollMaxY - window.scrollY
+            if(diff < 60) scrollDown()
+        }
+
 
         function loadMessages(data) {
             data.messages = Messages.list()
@@ -30,7 +38,7 @@
             let addedMessage = Messages.add(message)
 
             data.messages.push(addedMessage)
-            setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 1)
+            scrollDown()
         }
 
         async function addMessageStream(data, stream) {
@@ -40,8 +48,12 @@
             }
 
             data.messages.push(message)
+            scrollDown()
+
             for await (const value of stream) {
                 data.messages[data.messages.length - 1].content += value
+
+                streamScrollStep()
             }
 
             data.reader = undefined
@@ -51,7 +63,7 @@
             if (!content) return
 
             data.messages[data.messages.length - 1] = Messages.add(message)
-            setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 1)
+            scrollDown()
         }
 
         async function sendMessage(data, message) {
