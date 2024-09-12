@@ -100,7 +100,7 @@ class Completions {
         // Messages
         let messages = Messages.list()
         
-        messages.unshift({ role: 'system', content: '### Chat history'  })
+        // messages.unshift({ role: 'system', content: '### Chat history'  })
 
         if (!!profile.main) messages.unshift({ role: 'system', content: profile.main })
         if (!!profile.jailbreak) messages.push({ role: 'system', content: profile.jailbreak })
