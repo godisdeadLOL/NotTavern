@@ -64,7 +64,8 @@ class Profile {
             max_messages: 20,
             max_tokens: 1024,
             jailbreak: '',
-            main: ''
+            main: '',
+			temperature: 1.0
         }
 
         localStorage.setItem('profile', JSON.stringify(profile))
@@ -120,7 +121,8 @@ class Completions {
             messages,
             model: !profile.model_override ? profile.model : profile.model_override,
             max_tokens: profile.max_tokens,
-            stream: true
+            stream: true,
+			temperature: (profile.temperature ? profile.temperature : 1.0)
         }
 
         console.log(request)
